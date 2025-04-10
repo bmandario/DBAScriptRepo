@@ -1,0 +1,5 @@
+use msdb
+go 
+
+select primary_server,secondary_server, secondary_database, last_copied_date,last_restored_date, last_restored_latency 
+from log_shipping_monitor_secondary
