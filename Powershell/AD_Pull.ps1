@@ -1,0 +1,2 @@
+##Change directory of output location and file name
+get-aduser -filter * -properties name,EmployeeID,enabled,mail,description,department,employeenumber,cn,displayname,samaccountname,givenname,surname,title,co,office,manager -server corporate.ingrammicro.com | select name,EmployeeID,enabled,mail,description,department,employeenumber,cn,displayname,samaccountname,givenname,surname,title,co,office,@{Name="manager";Expression={(get-aduser $_.manager).name}} | EXPORT-CSV 'E:\MAP\test.csv'-NoTypeInformation
