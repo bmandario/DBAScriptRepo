@@ -1,0 +1,21 @@
+--Note this only works if the transactions haven't been removed due to INACTIVE example error:
+--The subscription(s) have been marked inactive and must be reinitialized. NoSync subscriptions will need to be dropped and recreated.
+
+select * From distribution..MSsubscriptions where status = 0 --Run first where distribution DB is located, if any results, these are the ones marked inactive.
+
+
+--Run the below with the correct parameters to fix the above
+if exists (select 1 from distribution..MSsubscriptions where status = 0)
+begin
+UPDATE distribution..MSsubscriptions
+SET STATUS = 2
+WHERE publisher_id = 1 --need to adjust DB based on previous above select statement
+    AND publisher_db = 'SecretServer'--need to adjust DB based on previous above select statement
+    AND publication_id = 12 --need to adjust DB based on previous above select statement
+    AND subscriber_id = 2 --need to adjust DB based on previous above select statement
+    AND subscriber_db = 'SecretServer'--need to adjust DB based on previous above select statement
+end
+else
+begin
+print 'The subscription is not INACTIVE ... you are good for now .... !!'
+end
