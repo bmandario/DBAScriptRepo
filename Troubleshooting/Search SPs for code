@@ -1,0 +1,37 @@
+DECLARE @CodeToSearch NVARCHAR(200), @SQLcmd NVARCHAR(4000)
+DECLARE @SerchResult TABLE (DatabaseName VARCHAR(200), ObejectType VARCHAR(200), ObjectName VARCHAR(200), CreatedDate DATETIME, LastModfy DATETIME, GetObjectCode VARCHAR(500) )
+
+ 
+
+SET @CodeToSearch = 'SALES ORDER NOT FOUND'
+
+ 
+
+SET @SQLcmd =N' USE ?; 
+
+ 
+
+            SELECT DISTINCT
+                            DatabaseName  = DB_NAME()
+                            ,ObejectType   = ob.type_desc
+                            ,ObjectName    = ob.name 
+                            ,CreatedDate   = ob.create_date
+                            ,LastModfy       = ob.modify_date 
+                            ,GetObjectCode = ''use ''+DB_NAME()+''; exec sp_helptext [''+ob.name+'']''
+            FROM syscomments sc with (nolock)
+            JOIN sys.objects ob with (nolock) on ob.object_id = sc.id
+            WHERE text like ''%'+ @CodeToSearch +'%'' COLLATE  SQL_Latin1_General_CP1_CI_AS
+            and sc.encrypted = 0'
+
+ 
+
+-- PRINT @SQLcmd
+
+ 
+
+INSERT INTO @SerchResult
+       EXEC sys.sp_MSforeachdb @command1 = @SQLcmd
+
+ 
+
+SELECT * FROM @SerchResult
