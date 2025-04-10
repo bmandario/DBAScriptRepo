@@ -1,0 +1,28 @@
+This is V2 version:
+Based on input parameter thread number, job will auto create number of update stats jobs.
+Each update stats job will loop in maint table and and pickup the stats name, and update.
+All job will continue to update stats untill all finished
+
+=====> Deploy steps:
+Must deploy in DBA_WORKS DB.
+To [850155-SQLREPT.na.cloudblue.com].[DBA_WORK]:
+create_maint_table.sql
+1_usp_TotalRowCount_Collect.sql
+2_usp_stats_collect.sql (for ITAD: 2_usp_stats_collect_ITAD.sql)
+
+3_usp_stats_job_create.sql
+4_usp_stats_update_by_list.sql
+5_usp_UpdateStats_MultiThread_Job_ByEachTable.sql
+
+After all SP deploy.  Job must be created:
+    Sample job can be found [850155-SQLREPT.na.cloudblue.com]
+Jobs have 5 steps:
+1- Truncate log table (truncate_Log_table_prior_run.sql)
+2- Call SP created from usp_TotalRowCount_Collect.sql
+3- Call SP created from usp_stats_collect.sql
+4- Call SP created from 5_usp_UpdateStats_MultiThread_Job_ByEachTable.sql
+5- Alert DBA if there is failure (usp_Stats_Maint_Failed_Alert.sql)
+
+** Job should be schedule weekday M-F at (time can be determined)
+
+

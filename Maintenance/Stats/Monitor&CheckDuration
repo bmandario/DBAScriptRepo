@@ -1,0 +1,18 @@
+--===========Monitor and Check Duration=========================
+--How many stats need to update
+select * FROM [DBA_WORK].[dbo].[stats_maint_loop_by_table] where RunID = 2
+
+--How many thread is currently running
+SELECT TableName, Completed, Islocked
+  FROM [DBA_WORK].[dbo].[stats_maint_loop_by_table]
+  where RunID = 2
+  and Islocked = 1 and completed =0
+  group by TAbleName, completed, IsLocked
+
+--Is there any error
+select * from [dbo].[stats_maint_Error] where RunID = 2
+
+--Check Duration of the whole process update stats
+select min(UpdateStatsBegin) as StartTime, max(updatestatsEnd) as EndTime, datediff(minute, min(UpdateStatsBegin),max(updatestatsEnd)) as TotalDurationinMin
+from [DBA_WORK].[dbo].[stats_maint_loop_by_table]
+where RunID = 2

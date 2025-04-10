@@ -1,0 +1,26 @@
+Cloud SQL Server $$DB Maintenance Jobs
+
+The Jobs configuration is different from our traditional MSSQL Servers.
+The following jobs needs to be setup:
+$$IM Database Maintenance – DBCC
+$$IM Database Maintenance - Index
+$$IM Database Maintenance - Jobs
+
+1)	Create Database dba_work
+2)	Execute the following scripts on dba_work database you’ve just created as we cannot add the jobs:
+
+A.	CommandExecute.sql
+B.	CommandLog.sql
+C.	DatabaseBackup.sql
+D.	DatabaseIntegrityCheck.sql
+E.	IndexOptimize.sql
+F.	Queue.sql
+G.	QueueDatabase.sql
+
+3)	Then execute the following scripts to create the actual maintenance jobs:
+
+A.	$$IM Database Maintenance - DBCC.sql
+B.	$$IM Database Maintenance - Index.sql
+C.	$$IM Database Maintenance - Stats.sql
+
+4)	Once Completed double check the job schedules (As the timing is different from NA and EMEA).
