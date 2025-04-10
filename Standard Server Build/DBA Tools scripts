@@ -1,0 +1,14 @@
+-- https://dbatools.io/
+-- Execute this on USCHWSQL1321 powershell
+-- Requires that CORPORATE\NA_IM_SQL_ADM has both local server admin and SQL admin rights on the destination server
+
+Copy-DbaLinkedServer -Source USCHWSQL4606\TEST2 -Destination USCHWSQL4607\NIKKO
+
+Copy-DbaCredential -Source USCHWSQL4606\TEST2 -Destination USCHWSQL4607\NIKKO
+
+Copy-DbaAgentOperator -Source USCHWSQL4606\TEST2 -Destination USCHWSQL4607\NIKKO -ExcludeOperator DBA
+
+Copy-DbaAgentJob -Source USCHWSQL4606\TEST2 -Destination USCHWSQL4607\NIKKO -DisableOnDestination -ExcludeJob 'SSIS Server Maintenance Job','sp_purge_jobhistory'
+
+**SSIS DB Catalog should already been created at destination server
+Copy-DbaSsisCatalog -Source USCHWSQL4606\TEST2 -Destination USCHWSQL4607\NIKKO
